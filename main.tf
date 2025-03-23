@@ -6,56 +6,56 @@ module "resource_group" {
   tags                = var.tags
 }
 
-//Virtual Network Deployment
-module "virtual_network" {
-  source              = "./module_stack/azure_virtual_network"
-  vnet_name           = var.vnet_name
-  resource_group_name = module.resource_group.name
-  location            = var.location
-  address_space       = var.address_space
-  dns_servers         = var.dns_servers
-  tags                = var.tags
-}
+# //Virtual Network Deployment
+# module "virtual_network" {
+#   source              = "./module_stack/azure_virtual_network"
+#   vnet_name           = var.vnet_name
+#   resource_group_name = module.resource_group.name
+#   location            = var.location
+#   address_space       = var.address_space
+#   dns_servers         = var.dns_servers
+#   tags                = var.tags
+# }
 
-//Subnet Deployment
-module "subnet" {
-  source                   = "./module_stack/azure_subnets"
-  subnet_name              = var.subnet_name
-  resource_group_name      = module.virtual_network.resource_group_name
-  virtual_network_name     = module.virtual_network.name
-  subnet_prefixes          = var.subnet_prefixes
-  subnet_service_endpoints = var.subnet_service_endpoints
-}
+# //Subnet Deployment
+# module "subnet" {
+#   source                   = "./module_stack/azure_subnets"
+#   subnet_name              = var.subnet_name
+#   resource_group_name      = module.virtual_network.resource_group_name
+#   virtual_network_name     = module.virtual_network.name
+#   subnet_prefixes          = var.subnet_prefixes
+#   subnet_service_endpoints = var.subnet_service_endpoints
+# }
 
-// NSG Deployment
-module "network_security_group" {
-  source                    = "./module_stack/azure_network_security_group"
-  nsg_name                  = var.nsg_name
-  location                  = module.virtual_network.location
-  resource_group_name       = module.virtual_network.resource_group_name
-  nsg_association_subnet_id = module.subnet.id
-  tags                      = var.tags
-}
+# // NSG Deployment
+# module "network_security_group" {
+#   source                    = "./module_stack/azure_network_security_group"
+#   nsg_name                  = var.nsg_name
+#   location                  = module.virtual_network.location
+#   resource_group_name       = module.virtual_network.resource_group_name
+#   nsg_association_subnet_id = module.subnet.id
+#   tags                      = var.tags
+# }
 
-// App Insights Deployment
-module "application_insights" {
-  source              = "./module_stack/azure_application_insights"
-  app_insights_name   = var.app_insights_name
-  location            = module.resource_group.location
-  resource_group_name = module.resource_group.name
-  workspace_id        = data.azurerm_log_analytics_workspace.existing_log_analytics_ws.id
-  tags                = var.tags
-}
+# // App Insights Deployment
+# module "application_insights" {
+#   source              = "./module_stack/azure_application_insights"
+#   app_insights_name   = var.app_insights_name
+#   location            = module.resource_group.location
+#   resource_group_name = module.resource_group.name
+#   workspace_id        = data.azurerm_log_analytics_workspace.existing_log_analytics_ws.id
+#   tags                = var.tags
+# }
 
-// Private DNS Zones Deployment
-module "private_dns_zone" {
-  source                          = "./module_stack/azure_private_dns_zone"
-  private_dns_zone_name           = var.private_dns_zone_name
-  resource_group_name             = module.virtual_network.resource_group_name
-  private_dns_zone_vnet_link_name = module.virtual_network.name
-  virtual_network_id              = module.virtual_network.id
-  tags                            = var.tags
-}
+# // Private DNS Zones Deployment
+# module "private_dns_zone" {
+#   source                          = "./module_stack/azure_private_dns_zone"
+#   private_dns_zone_name           = var.private_dns_zone_name
+#   resource_group_name             = module.virtual_network.resource_group_name
+#   private_dns_zone_vnet_link_name = module.virtual_network.name
+#   virtual_network_id              = module.virtual_network.id
+#   tags                            = var.tags
+# }
 
 // Log AnalyticsDeployment
 # module "log_analytics_workspace" {
