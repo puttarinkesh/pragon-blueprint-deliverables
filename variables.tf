@@ -48,11 +48,28 @@ variable "subnet_service_endpoints" {
   type        = list(string)
   default     = []
 }
+variable "subnet_name_application" {
+  description = "A list of public subnets inside the vNet."
+  type        = string
+}
+variable "subnet_prefixes_application" {
+  description = "The address prefix to use for the subnet."
+  type        = list(string)
+}
+variable "subnet_service_endpoints_application" {
+  description = "A map of subnet name to service endpoints to add to the subnet."
+  type        = list(string)
+  default     = []
+}
 //********************************************************************************************
 
 //NSG Variables 
 //********************************************************************************************
 variable "nsg_name" {
+  description = "(Required) Specifies the name of the network security group. Changing this forces a new resource to be created."
+  type        = string
+}
+variable "nsg_name_app" {
   description = "(Required) Specifies the name of the network security group. Changing this forces a new resource to be created."
   type        = string
 }
@@ -95,11 +112,9 @@ variable "private_dns_zone_vnet_link_name" {
 variable "storage_account_name" {
   description = "(Optional) A unique identifier for the storage account. Part of the naming scheme."
   type        = string
-  default     = "strgaikqa123"
 }
 variable "storage_account_container_name" {
   description = "(Required) The name of the Container which should be created within the Storage Account. Changing this forces a new resource to be created."
-  default     = "azure-webjobs-hosts"
 }
 
 // API Management

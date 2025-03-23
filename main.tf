@@ -1,90 +1,107 @@
 //Resource Group Deployment
 module "resource_group" {
-  source              = "./module_stack/azure_resource_groups"
+  source              = "./terraform_modules/azure_resource_groups"
   resource_group_name = var.resource_group_name
   location            = var.location
   tags                = var.tags
 }
 
-# //Virtual Network Deployment
-# module "virtual_network" {
-#   source              = "./module_stack/azure_virtual_network"
-#   vnet_name           = var.vnet_name
-#   resource_group_name = module.resource_group.name
-#   location            = var.location
-#   address_space       = var.address_space
-#   dns_servers         = var.dns_servers
-#   tags                = var.tags
-# }
+//Virtual Network Deployment
+module "virtual_network" {
+  source              = "./terraform_modules/azure_virtual_network"
+  vnet_name           = var.vnet_name
+  resource_group_name = module.resource_group.name
+  location            = var.location
+  address_space       = var.address_space
+  dns_servers         = var.dns_servers
+  tags                = var.tags
+}
 
-# //Subnet Deployment
-# module "subnet" {
-#   source                   = "./module_stack/azure_subnets"
-#   subnet_name              = var.subnet_name
-#   resource_group_name      = module.virtual_network.resource_group_name
-#   virtual_network_name     = module.virtual_network.name
-#   subnet_prefixes          = var.subnet_prefixes
-#   subnet_service_endpoints = var.subnet_service_endpoints
-# }
+//Subnet Deployment
+module "subnet_private_endpoint" {
+  source                   = "./terraform_modules/azure_subnets"
+  subnet_name              = var.subnet_name
+  resource_group_name      = module.virtual_network.resource_group_name
+  virtual_network_name     = module.virtual_network.name
+  subnet_prefixes          = var.subnet_prefixes
+  subnet_service_endpoints = var.subnet_service_endpoints
+}
 
-# // NSG Deployment
-# module "network_security_group" {
-#   source                    = "./module_stack/azure_network_security_group"
-#   nsg_name                  = var.nsg_name
-#   location                  = module.virtual_network.location
-#   resource_group_name       = module.virtual_network.resource_group_name
-#   nsg_association_subnet_id = module.subnet.id
-#   tags                      = var.tags
-# }
+module "subnet_application" {
+  source                   = "./terraform_modules/azure_subnets"
+  subnet_name              = var.subnet_name_application
+  resource_group_name      = module.virtual_network.resource_group_name
+  virtual_network_name     = module.virtual_network.name
+  subnet_prefixes          = var.subnet_prefixes
+  subnet_service_endpoints = var.subnet_service_endpoints
+}
 
-# // App Insights Deployment
-# module "application_insights" {
-#   source              = "./module_stack/azure_application_insights"
-#   app_insights_name   = var.app_insights_name
-#   location            = module.resource_group.location
-#   resource_group_name = module.resource_group.name
-#   workspace_id        = data.azurerm_log_analytics_workspace.existing_log_analytics_ws.id
-#   tags                = var.tags
-# }
+// NSG Deployment
+module "network_security_group_pe" {
+  source                    = "./terraform_modules/azure_network_security_group"
+  nsg_name                  = var.nsg_name
+  location                  = module.virtual_network.location
+  resource_group_name       = module.virtual_network.resource_group_name
+  nsg_association_subnet_id = module.subnet_private_endpoint.id
+  tags                      = var.tags
+}
 
-# // Private DNS Zones Deployment
-# module "private_dns_zone" {
-#   source                          = "./module_stack/azure_private_dns_zone"
-#   private_dns_zone_name           = var.private_dns_zone_name
-#   resource_group_name             = module.virtual_network.resource_group_name
-#   private_dns_zone_vnet_link_name = module.virtual_network.name
-#   virtual_network_id              = module.virtual_network.id
-#   tags                            = var.tags
-# }
+module "network_security_group_app" {
+  source                    = "./terraform_modules/azure_network_security_group"
+  nsg_name                  = var.nsg_name_app
+  location                  = module.virtual_network.location
+  resource_group_name       = module.virtual_network.resource_group_name
+  nsg_association_subnet_id = module.subnet_application.id
+  tags                      = var.tags
+}
+
+// Private DNS Zones Deployment
+module "private_dns_zone" {
+  source                          = "./terraform_modules/azure_private_dns_zone"
+  private_dns_zone_name           = var.private_dns_zone_name
+  resource_group_name             = module.virtual_network.resource_group_name
+  private_dns_zone_vnet_link_name = module.virtual_network.name
+  virtual_network_id              = module.virtual_network.id
+  tags                            = var.tags
+}
 
 // Log AnalyticsDeployment
-# module "log_analytics_workspace" {
-#   source                       = "./module_stack/azure_log_analytics_workspace"
-#   log_analytics_workspace_name = var.log_analytics_workspace_name
-#   resource_group_name          = module.resource_group_qa.name
-#   location                     = module.resource_group_qa.location
-# }
+module "log_analytics_workspace" {
+  source                       = "./terraform_modules/azure_log_analytics_workspace"
+  log_analytics_workspace_name = var.log_analytics_workspace_name
+  resource_group_name          = module.resource_group.name
+  location                     = module.resource_group.location
+}
+
+// App Insights Deployment
+module "application_insights" {
+  source              = "./terraform_modules/azure_application_insights"
+  app_insights_name   = var.app_insights_name
+  location            = module.resource_group.location
+  resource_group_name = module.resource_group.name
+  workspace_id        = module.log_analytics_workspace.id
+  tags                = var.tags
+}
 
 // Storage Account Deployment
-# module "storage_account" {
-#   source               = "../storage_account"
-#   storage_account_name = var.storage_account_name
-#   resource_group_name  = module.resource_group_qa.name
-#   location             = module.resource_group_qa.location
-# }
+module "storage_account" {
+  source                                     = "./terraform_modules/azure_storage_account"
+  storage_account_name                       = var.storage_account_name
+  resource_group_name                        = module.resource_group.name
+  location                                   = module.resource_group.location
+  storage_account_log_analytics_workspace_id = module.log_analytics_workspace.id
+}
 
 // Storage Account Container Deployment
-# module "storage_account_container1" {
-#   source                         = "../storage_account_container"
-#   storage_account_container_name = var.storage_account_container_name
-#   storage_account_name           = module.storage_account.name
-# }
-
-
+module "storage_account_container1" {
+  source                         = "./terraform_modules/azure_storage_account_container"
+  storage_account_container_name = var.storage_account_container_name
+  storage_account_name           = module.storage_account.name
+}
 
 
 # module "api_management" {
-#   source                                  = "./module_stack/azure_api_management"
+#   source                                  = "./terraform_modules/azure_api_management"
 #   managed_identity_name                   = var.managed_identity_name
 #   api_mgmt_name                           = var.api_mgmt_name
 #   api_mgmt_rg_name                        = module.resource_group.name
@@ -99,7 +116,7 @@ module "resource_group" {
 
 
 # module "api" {
-#   source                   = "./module_stack/azure_api_management_api"
+#   source                   = "./terraform_modules/azure_api_management_api"
 #   api_name                 = var.api_name
 #   api_resource_group_name  = "APIM-RG-NonProd-Test"                   #module.resource_group.name
 #   api_api_management_name  = "APIM-BlueKC-Second-Instance-API-Import" #module.api_management.name
@@ -112,7 +129,7 @@ module "resource_group" {
 # }
 
 # module "api_final_poc" {
-#   source = "./module_stack/azure_api_management_api_02"
+#   source = "./terraform_modules/azure_api_management_api_02"
 #   api_mngmt_api_deploy  = var.api_mngmt_api_deploy
 # }
 # //**********************************************************************************************

@@ -3,29 +3,35 @@
 resource_group_name = "rg-nonprod-bloom-app01"
 location            = "central us"
 tags = {
-  "LOB" = "IT - Digital"  #Line of business
-  "Environment" = "nonprod"
+  "LOB"           = "IT - Digital" #Line of business
+  "Environment"   = "nonprod"
   "Project Owner" = "delivery head"
 }
 
 //Virtual Network Variables 
 //********************************************************************************************
 vnet_name     = "vnet-nonprod-bloom-app01"
-address_space = ["10.209.0.0/20"]
+address_space = ["10.200.0.0/20"]
+dns_servers   = ["192.168.0.0"]
 
 //Subnet Variables 
 //********************************************************************************************
-subnet_name              = "subnet-nonprod-bloom-app01"
-subnet_prefixes          = ["10.209.0.0/24"]
-subnet_service_endpoints = ["Microsoft.Web"]
+subnet_name              = "pe-subnet-nonprod-bloom-app01"
+subnet_prefixes          = ["10.200.0.0/24"]
+subnet_service_endpoints = ["Microsoft.Web", "Microsoft.Storage", "Microsoft.Sql", "Microsoft.KeyVault"]
+
+subnet_name_application              = "app-subnet-nonprod-bloom-app01"
+subnet_prefixes_application          = ["10.200.1.0/24"]
+subnet_service_endpoints_application = [] #["Microsoft.Web", "Microsoft.Sql"]
 
 //NSG Variables 
 //********************************************************************************************
-nsg_name = "nsg-nonprod-bloom-app01"
+nsg_name     = "nsg-nonprod-bloom-pe"
+nsg_name_app = "nsg-nonprod-bloom-app01"
 
 // Application Insights Variables
 //**********************************************************************************************
-app_insights_name            = "appinsights-nonprod-bloom-app01"
+app_insights_name = "appinsights-nonprod-bloom-app01"
 
 // Variables Private Dns Zone = 
 //**********************************************************************************************
@@ -34,7 +40,7 @@ private_dns_zone_vnet_link_name = "linktopublicnonprodapp01"
 
 //Variables for Storage Account 01
 //****************************************************************************
-storage_account_name  = "storage-nonprod-bloom-app01"
+storage_account_name           = "stononprodbloomapp01"
 storage_account_container_name = "container-nonprod-bloom-app01"
 
 // API Management
@@ -74,9 +80,9 @@ api_mngmt_api_deploy = {
     sub_header            = "Ocp-Subscription-Key"
     sub_query             = "subscription-key"
     import_content_format = "openapi+json"
-    import_content_value  = "./fileboundapi.json"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
+    import_content_value  = "./fileboundapi.json" #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
   },
-      "crmupdate" = {
+  "crmupdate" = {
     name                  = "crmupdate"
     display_name          = "crmupdate"
     resource_group_name   = "rg-nonprod-app01"
@@ -89,7 +95,7 @@ api_mngmt_api_deploy = {
     sub_header            = "Ocp-Subscription-Key"
     sub_query             = "subscription-key"
     import_content_format = "openapi+json"
-    import_content_value  = "openapi+json"  #"${data.template_file.init.rendered}" #"${api_mngmt_api_deploy.fileboundapi.import_content_value}"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
+    import_content_value  = "openapi+json" #"${data.template_file.init.rendered}" #"${api_mngmt_api_deploy.fileboundapi.import_content_value}"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
     import_content_value  = "./CRMUpdate.json"
   }
 }

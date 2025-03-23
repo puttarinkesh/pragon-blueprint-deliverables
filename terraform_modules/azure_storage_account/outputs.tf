@@ -2,14 +2,14 @@
 //****************************************************************************
 output "name" {
   description = "The name of the newly created storage account"
-  value       = azurerm_storage_account.storage_account_01.name
+  value       = azurerm_storage_account.storage_account.name
 }
 output "id" {
   description = "The name of the newly created storage account"
-  value       = azurerm_storage_account.storage_account_01.id
+  value       = azurerm_storage_account.storage_account.id
 }
 output "primary_access_key" {
   description = "The name of the newly created storage account"
-  value       = azurerm_storage_account.storage_account_01.primary_access_key
+  value       = azurerm_storage_account.storage_account.primary_access_key
 }
 //****************************************************************************
