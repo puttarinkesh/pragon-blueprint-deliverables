@@ -17,6 +17,7 @@ module "virtual_network" {
   tags                = var.tags
 }
 
+//Subnet Deployment
 module "subnet" {
   source                   = "./module_stack/azure_subnets"
   subnet_name              = var.subnet_name
@@ -26,6 +27,7 @@ module "subnet" {
   subnet_service_endpoints = var.subnet_service_endpoints
 }
 
+// NSG Deployment
 module "network_security_group" {
   source                    = "./module_stack/azure_network_security_group"
   nsg_name                  = var.nsg_name
@@ -35,6 +37,7 @@ module "network_security_group" {
   tags                      = var.tags
 }
 
+// App Insights Deployment
 module "application_insights" {
   source              = "./module_stack/azure_application_insights"
   app_insights_name   = var.app_insights_name
@@ -44,16 +47,7 @@ module "application_insights" {
   tags                = var.tags
 }
 
-module "application_insights_fep_member" {
-  source              = "./module_stack/azure_application_insights"
-  app_insights_name   = var.app_insights_name_fep_member
-  location            = module.resource_group.location
-  resource_group_name = module.resource_group.name
-  workspace_id        = data.azurerm_log_analytics_workspace.existing_log_analytics_ws.id
-  tags                = var.tags
-}
-
-
+// Private DNS Zones Deployment
 module "private_dns_zone" {
   source                          = "./module_stack/azure_private_dns_zone"
   private_dns_zone_name           = var.private_dns_zone_name
@@ -62,6 +56,31 @@ module "private_dns_zone" {
   virtual_network_id              = module.virtual_network.id
   tags                            = var.tags
 }
+
+// Log AnalyticsDeployment
+# module "log_analytics_workspace" {
+#   source                       = "./module_stack/azure_log_analytics_workspace"
+#   log_analytics_workspace_name = var.log_analytics_workspace_name
+#   resource_group_name          = module.resource_group_qa.name
+#   location                     = module.resource_group_qa.location
+# }
+
+// Storage Account Deployment
+# module "storage_account" {
+#   source               = "../storage_account"
+#   storage_account_name = var.storage_account_name
+#   resource_group_name  = module.resource_group_qa.name
+#   location             = module.resource_group_qa.location
+# }
+
+// Storage Account Container Deployment
+# module "storage_account_container1" {
+#   source                         = "../storage_account_container"
+#   storage_account_container_name = var.storage_account_container_name
+#   storage_account_name           = module.storage_account.name
+# }
+
+
 
 
 # module "api_management" {
@@ -79,51 +98,24 @@ module "private_dns_zone" {
 # }
 
 
-
-# module "log_analytics_workspace" {
-#   source                       = "./module_stack/azure_log_analytics_workspace"
-#   log_analytics_workspace_name = var.log_analytics_workspace_name
-#   resource_group_name          = module.resource_group_qa.name
-#   location                     = module.resource_group_qa.location
+# module "api" {
+#   source                   = "./module_stack/azure_api_management_api"
+#   api_name                 = var.api_name
+#   api_resource_group_name  = "APIM-RG-NonProd-Test"                   #module.resource_group.name
+#   api_api_management_name  = "APIM-BlueKC-Second-Instance-API-Import" #module.api_management.name
+#   api_display_name         = var.api_display_name
+#   api_path                 = var.api_path
+#   api_service_url          = var.api_service_url
+#   api_sub_parameter_header = var.api_sub_parameter_header
+#   api_sub_parameter_query  = var.api_sub_parameter_query
+#   api_import_content_value = file("${path.module}/api-demo-02.json")
 # }
 
-
-
-module "api" {
-  source                   = "./module_stack/azure_api_management_api"
-  api_name                 = var.api_name
-  api_resource_group_name  = "APIM-RG-NonProd-Test"                   #module.resource_group.name
-  api_api_management_name  = "APIM-BlueKC-Second-Instance-API-Import" #module.api_management.name
-  api_display_name         = var.api_display_name
-  api_path                 = var.api_path
-  api_service_url          = var.api_service_url
-  api_sub_parameter_header = var.api_sub_parameter_header
-  api_sub_parameter_query  = var.api_sub_parameter_query
-  api_import_content_value = file("${path.module}/api-demo-02.json")
-}
-
-
-module "api02" {
-  source                   = "./module_stack/azure_api_management_api"
-  api_name                 = "ApigeePassthrough-Demo-02"
-  api_resource_group_name  = "APIM-RG-NonProd-Test"                   #module.resource_group.name
-  api_api_management_name  = "APIM-BlueKC-Second-Instance-API-Import" #module.api_management.name
-  api_display_name         = "ApigeePassthrough-Demo-02"              #var.api_display_name
-  api_path                 = "apigee"                                 #var.api_path #"echo"                                   #var.api_path
-  api_service_url          = var.api_service_url                      #"https://apim-bluekc-second-instance-api-import.azure-api.net/echo" #"http://echoapi.cloudapp.net/api" #var.api_service_url
-  api_sub_parameter_header = var.api_sub_parameter_header
-  api_sub_parameter_query  = var.api_sub_parameter_query
-  api_import_content_value = file("${path.module}/api-demo-02.json")
-}
+# module "api_final_poc" {
+#   source = "./module_stack/azure_api_management_api_02"
+#   api_mngmt_api_deploy  = var.api_mngmt_api_deploy
+# }
 # //**********************************************************************************************
-
-
-
-
-module "api_final_poc" {
-  source = "./module_stack/azure_api_management_api_02"
-  api_mngmt_api_deploy  = var.api_mngmt_api_deploy
-}
 
 
 

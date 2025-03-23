@@ -76,10 +76,6 @@ variable "app_insights_name" {
   description = "(Required) Specifies the name of the Application Insights component. Changing this forces a new resource to be created."
   type        = string
 }
-variable "app_insights_name_fep_member" {
-  description = "(Required) Specifies the name of the Application Insights component. Changing this forces a new resource to be created."
-  type        = string
-}
 //********************************************************************************************
 
 // Variables Private Dns Zone
@@ -93,6 +89,18 @@ variable "private_dns_zone_vnet_link_name" {
   type        = string
 }
 //********************************************************************************************
+
+//Variables for Storage Account 01
+//****************************************************************************
+variable "storage_account_name" {
+  description = "(Optional) A unique identifier for the storage account. Part of the naming scheme."
+  type        = string
+  default     = "strgaikqa123"
+}
+variable "storage_account_container_name" {
+  description = "(Required) The name of the Container which should be created within the Storage Account. Changing this forces a new resource to be created."
+  default     = "azure-webjobs-hosts"
+}
 
 // API Management
 //**********************************************************************************************

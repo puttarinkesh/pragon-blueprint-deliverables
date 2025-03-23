@@ -1,6 +1,6 @@
 //Resource Group Variables 
 //********************************************************************************************
-resource_group_name = "rg-nonprod-demo"
+resource_group_name = "rg-nonprod-bloom-app01"
 location            = "central us"
 tags = {
   "LOB" = "IT - Digital"  #Line of business
@@ -10,33 +10,37 @@ tags = {
 
 //Virtual Network Variables 
 //********************************************************************************************
-vnet_name     = "USA-vnet-nonprod-demo"
+vnet_name     = "vnet-nonprod-bloom-app01"
 address_space = ["10.209.0.0/20"]
 
 //Subnet Variables 
 //********************************************************************************************
-subnet_name              = "USA-subnet-nonprod-demo"
+subnet_name              = "subnet-nonprod-bloom-app01"
 subnet_prefixes          = ["10.209.0.0/24"]
 subnet_service_endpoints = ["Microsoft.Web"]
 
 //NSG Variables 
 //********************************************************************************************
-nsg_name = "NSG-nonprod-demo"
+nsg_name = "nsg-nonprod-bloom-app01"
 
 // Application Insights Variables
 //**********************************************************************************************
-app_insights_name            = "AppInsights-nonprod-demo"
-app_insights_name_fep_member = "FEP-Member-Eligibility-AppInsights-nonprod-demo"
+app_insights_name            = "appinsights-nonprod-bloom-app01"
 
 // Variables Private Dns Zone = 
 //**********************************************************************************************
-private_dns_zone_name           = ["azure-api.net"]
-private_dns_zone_vnet_link_name = "linktopublicnonproddemo"
+private_dns_zone_name           = ["privatelink.azurewebsites.us", "privatelink.database.windows.net", "privatelink.blob.core.windows.net"]
+private_dns_zone_vnet_link_name = "linktopublicnonprodapp01"
+
+//Variables for Storage Account 01
+//****************************************************************************
+storage_account_name  = "storage-nonprod-bloom-app01"
+storage_account_container_name = "container-nonprod-bloom-app01"
 
 // API Management
 //**********************************************************************************************
-managed_identity_name    = "APIMnonprod-AzureKeyVault-MI-nonprod-demo"
-api_mgmt_name            = "BlueKC-nonprod-demo"
+managed_identity_name    = "azurekeyvault-mi-nonprod-bloom-app01"
+api_mgmt_name            = "BlueKC-nonprod-bloom-app01"
 api_mgmt_publisher_name  = "BlueKC"
 api_mgmt_publisher_email = "IS_ARCH@bluekc.com"
 
@@ -49,37 +53,34 @@ log_analytics_workspace_rg_name = "defaultresourcegroup-neu"                    
 
 // Variables API's on Azure API Management
 //**********************************************************************************************
-api_name                 = "ApigeePassthrough-Demo"
-api_display_name         = "ApigeePassthrough-Demo"
+api_name                 = "ApigeePassthrough-app01"
+api_display_name         = "ApigeePassthrough-app01"
 api_path                 = "apigee"
-api_service_url          = "https://bluekc-second-instance-api-import.azure-api.net" #"https://bluekc-nonprod-demo.apigee.net"
+api_service_url          = "https://bluekc-second-instance-api-import.azure-api.net" #"https://bluekc-nonprod-app01.apigee.net"
 api_sub_parameter_header = "Ocp-Subscription-Key"
 api_sub_parameter_query  = "subscription-Key"
-
-
-
 
 api_mngmt_api_deploy = {
   "fileboundapi" = {
     name                  = "fileboundapi"
     display_name          = "FileBoundAPI"
-    resource_group_name   = "rg-nonprod-Demo"
-    api_management_name   = "BlueKC-nonprod-Demo"
+    resource_group_name   = "rg-nonprod-app01"
+    api_management_name   = "BlueKC-nonprod-app01"
     revision              = "1"
-    path_suffix           = "FBdemo/api"
+    path_suffix           = "FBapp01/api"
     protocols             = ["https"]
-    service_url           = "https://nfm.demo.bcbskc.com/FBdemo/api"
-    terms_of_service_url  = "https://apis.demo.bluekc.com/FBdemo/api"
+    service_url           = "https://nfm.app01.bcbskc.com/FBapp01/api"
+    terms_of_service_url  = "https://apis.app01.bluekc.com/FBapp01/api"
     sub_header            = "Ocp-Subscription-Key"
     sub_query             = "subscription-key"
     import_content_format = "openapi+json"
-    import_content_value  = "./fileboundapi.json"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"demo"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
+    import_content_value  = "./fileboundapi.json"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
   },
       "crmupdate" = {
     name                  = "crmupdate"
     display_name          = "crmupdate"
-    resource_group_name   = "rg-nonprod-Demo"
-    api_management_name   = "BlueKC-nonprod-Demo"
+    resource_group_name   = "rg-nonprod-app01"
+    api_management_name   = "BlueKC-nonprod-app01"
     revision              = "1"
     path_suffix           = "crmupdate"
     protocols             = ["https"]
@@ -88,7 +89,7 @@ api_mngmt_api_deploy = {
     sub_header            = "Ocp-Subscription-Key"
     sub_query             = "subscription-key"
     import_content_format = "openapi+json"
-    import_content_value  = "openapi+json"  #"${data.template_file.init.rendered}" #"${api_mngmt_api_deploy.fileboundapi.import_content_value}"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"demo"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
+    import_content_value  = "openapi+json"  #"${data.template_file.init.rendered}" #"${api_mngmt_api_deploy.fileboundapi.import_content_value}"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
     import_content_value  = "./CRMUpdate.json"
   }
 }
@@ -102,8 +103,8 @@ api_mngmt_api_deploy = {
     "crmupdate" = {
     name                  = "crmupdate"
     display_name          = "crmupdate"
-    resource_group_name   = "rg-nonprod-Demo"
-    api_management_name   = "BlueKC-nonprod-Demo"
+    resource_group_name   = "rg-nonprod-app01"
+    api_management_name   = "BlueKC-nonprod-app01"
     revision              = "1"
     path_suffix           = "crmupdate"
     protocols             = ["https"]
@@ -112,7 +113,7 @@ api_mngmt_api_deploy = {
     sub_header            = "Ocp-Subscription-Key"
     sub_query             = "subscription-key"
     import_content_format = "openapi+json"
-    #import_content_value  = "${data.template_file.init.rendered}" #"${api_mngmt_api_deploy.fileboundapi.import_content_value}"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"demo"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
+    #import_content_value  = "${data.template_file.init.rendered}" #"${api_mngmt_api_deploy.fileboundapi.import_content_value}"  #"00"  #local.api_name #"${data.template_file.init.rendered}"  #var.api_name  #data.template_file.init.rendered          #"${path.module}/fileboundapi.json"  #"../fileboundapi.json"  #"app01"  #file("${path.module}/fileboundapi.json")  #"fileboundapi.json" #file(../)  #"
     import_content_value  = ""
   }
   */
@@ -128,7 +129,7 @@ api_mngmt_api_deploy = {
 //   api_service_url          = "https://apis.test.bluekc.com/crmupdate"
 //   api_sub_parameter_header = "Ocp-Subscription-Key"
 //   api_sub_parameter_query  = "subscription-key"
-//   api_import_content_value = file("${path.module}/crmupdate.json") #file("")  #api-demo-02.json
+//   api_import_content_value = file("${path.module}/crmupdate.json") #file("")  #api-app01-02.json
 // }
 
 
