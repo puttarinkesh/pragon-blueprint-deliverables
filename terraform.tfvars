@@ -100,10 +100,14 @@ api_mngmt_api_deploy = {
   }
 }
 
+// Deploy Azure Key Vault 
+//**********************************************************************************************
+key_vault_name = "keyvaltnonprodbloomapp01"
 
-
-
-
+// Setup Azure SQL Database
+//**********************************************************************************************
+sql_database_name = "sql-db-nonprod-bloom-app01"
+sql_server_id     = "//"
 
 /*
     "crmupdate" = {

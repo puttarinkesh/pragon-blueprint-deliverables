@@ -98,6 +98,23 @@ module "storage_account_container1" {
   storage_account_name           = module.storage_account.name
 }
 
+// Key Vault Deployment
+module "key_vault" {
+  source                            = "./terraform_modules/azure_key_vault"
+  key_vault_name                    = var.key_vault_name
+  resource_group_name               = module.resource_group.name
+  location                          = module.resource_group.location
+  tenant_id                         = data.azurerm_subscription.current.tenant_id
+  keyvault_purge_protection_enabled = var.keyvault_purge_protection_enabled
+}
+
+// Azure SQL Database Deployment
+module "sql_database" {
+  source            = "./terraform_modules/azure_sql_database"
+  sql_database_name = var.sql_database_name
+  sql_server_id     = var.sql_server_id
+  tags              = var.tags
+}
 
 # module "api_management" {
 #   source                                  = "./terraform_modules/azure_api_management"

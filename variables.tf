@@ -135,7 +135,6 @@ variable "api_mgmt_publisher_email" {
 }
 //**********************************************************************************************
 
-
 // Variables API's on Azure API Management
 //**********************************************************************************************
 variable "api_name" {
@@ -207,10 +206,24 @@ variable "api_mngmt_api_deploy" {
 }
 //**********************************************************************************************
 
+// Azure Key Vault Variables
+//**********************************************************************************************
+variable "key_vault_name" {
+  description = "(Required) Specifies the name of the keyvault. Changing this forces a new resource to be created"
+}
+variable "keyvault_purge_protection_enabled" {
+  type        = bool
+  description = "(Optional) When purge protection is on, a vault or an object in the deleted state cannot be purged until the retention period has passed."
+  default     = false
+}
+//**********************************************************************************************
 
-
-
-
-
-
-
+// Setup Azure SQL Database
+//**********************************************************************************************
+variable "sql_database_name" {
+  description = "(Required) A string that is appended to the end of the database name to identify it."
+}
+variable "sql_server_id" {
+  description = "(Required) The id of the Ms SQL Server on which to create the database. Changing this forces a new resource to be created."
+}
+//**********************************************************************************************
