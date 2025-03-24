@@ -85,10 +85,10 @@ module "application_insights" {
 
 // Storage Account Deployment
 module "storage_account" {
-  source                                     = "./terraform_modules/azure_storage_account"
-  storage_account_name                       = var.storage_account_name
-  resource_group_name                        = module.resource_group.name
-  location                                   = module.resource_group.location
+  source               = "./terraform_modules/azure_storage_account"
+  storage_account_name = var.storage_account_name
+  resource_group_name  = module.resource_group.name
+  location             = module.resource_group.location
 }
 
 // Storage Account Container Deployment
