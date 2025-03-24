@@ -27,7 +27,7 @@ subnet_service_endpoints_application = [] #["Microsoft.Web", "Microsoft.Sql"]
 //NSG Variables 
 //********************************************************************************************
 nsg_name     = "nsg-nonprod-bloom-pe"
-nsg_name_app = "nsg-nonprod-bloom-app01"
+nsg_name_application = "nsg-nonprod-bloom-app01"
 
 // Application Insights Variables
 //**********************************************************************************************

@@ -14,26 +14,3 @@ resource "azurerm_storage_account" "storage_account" {
   tags                          = var.tags
 }
 //**********************************************************************************************
-
-// Sets up diagnostics for Storage Account
-//**********************************************************************************************
-resource "azurerm_monitor_diagnostic_setting" "storage_account_diagnostic_setting" {
-  name                       = "${var.storage_account_name}-diag"
-  target_resource_id         = azurerm_storage_account.storage_account.id
-  log_analytics_workspace_id = var.storage_account_log_analytics_workspace_id
-
-  dynamic "enabled_log" {
-    for_each = var.cl_storage_account_diagnostics.enabled_log
-    content {
-      category = enabled_log.value
-    }
-  }
-
-  dynamic "metric" {
-    for_each = var.cl_storage_account_diagnostics.metrics
-    content {
-      category = metric.value
-    }
-  }
-}
-//**********************************************************************************************

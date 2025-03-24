@@ -32,8 +32,8 @@ module "subnet_application" {
   subnet_name              = var.subnet_name_application
   resource_group_name      = module.virtual_network.resource_group_name
   virtual_network_name     = module.virtual_network.name
-  subnet_prefixes          = var.subnet_prefixes
-  subnet_service_endpoints = var.subnet_service_endpoints
+  subnet_prefixes          = var.subnet_prefixes_application
+  subnet_service_endpoints = var.subnet_service_endpoints_application
 }
 
 // NSG Deployment
@@ -48,7 +48,7 @@ module "network_security_group_pe" {
 
 module "network_security_group_app" {
   source                    = "./terraform_modules/azure_network_security_group"
-  nsg_name                  = var.nsg_name_app
+  nsg_name                  = var.nsg_name_application
   location                  = module.virtual_network.location
   resource_group_name       = module.virtual_network.resource_group_name
   nsg_association_subnet_id = module.subnet_application.id
@@ -89,7 +89,6 @@ module "storage_account" {
   storage_account_name                       = var.storage_account_name
   resource_group_name                        = module.resource_group.name
   location                                   = module.resource_group.location
-  storage_account_log_analytics_workspace_id = module.log_analytics_workspace.id
 }
 
 // Storage Account Container Deployment

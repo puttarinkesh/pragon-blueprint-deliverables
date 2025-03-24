@@ -40,21 +40,10 @@ variable "storage_account_tls_version" {
   description = "(Optional) The minimum supported TLS version for the storage account. Possible values are TLS1_0, TLS1_1, and TLS1_2."
   default     = "TLS1_2"
 }
-variable "storage_account_log_analytics_workspace_id" {
-  description = "(Required) The the log analytics workspace ID for diagnostics."
-}
 variable "tags" {
   description = "(Optional) A mapping of tags to assign to all resources."
   type        = map(any)
   default     = {}
-}
-variable "cl_storage_account_diagnostics" {
-  description = "(Optional) Diagnostic settings for those resources that support it."
-  type        = object({ enabled_log = list(string), metrics = list(string) })
-  default = {
-    enabled_log = ["StorageWrite", "StorageDelete"]
-    metrics     = ["Transaction"]
-  }
 }
 //****************************************************************************
 
