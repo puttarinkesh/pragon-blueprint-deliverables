@@ -14,7 +14,4 @@ output "sql_database" {
   description = "Database name of the Azure SQL Database created."
   value       = azurerm_mssql_database.sql_database
 }
-output "sql_database_diagnostic_settings" {
-  value = azurerm_monitor_diagnostic_setting.sql_database_diagnostic_settings
-}
 //****************************************************************************

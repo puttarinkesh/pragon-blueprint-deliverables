@@ -109,6 +109,13 @@ key_vault_name = "keyvaltnonprodbloomapp01"
 sql_database_name = "sql-db-nonprod-bloom-app01"
 sql_server_id     = "//"
 
+//Variables for CDN profile
+//****************************************************************************
+cdn_profile_name = "cdn-nonprod-bloom-app01"
+
+
+
+
 /*
     "crmupdate" = {
     name                  = "crmupdate"

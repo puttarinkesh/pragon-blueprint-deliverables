@@ -22,29 +22,6 @@ resource "azurerm_mssql_database" "sql_database" {
     week_of_year     = var.sql_database_LTR_week_of_year
   }
 
-  dynamic "threat_detection_policy" {
-    for_each = var.sql_database_threat_policy_state == "Enabled" ? 1 : 0
-    content {
-      state                      = var.sql_database_threat_policy_state
-      storage_account_access_key = var.storage_account_access_key
-      storage_endpoint           = var.storage_account_endpoint
-      disabled_alerts            = var.sql_database_disabled_alerts
-      retention_days             = var.sql_database_threat_logs_retention
-      email_account_admins       = var.sql_database_threat_email_admins
-      email_addresses            = var.sql_database_threat_emails
-    }
-  }
-
-  threat_detection_policy {
-    state                      = var.sql_database_threat_policy_state
-    storage_account_access_key = var.storage_account_access_key
-    storage_endpoint           = var.storage_account_endpoint
-    disabled_alerts            = var.sql_database_disabled_alerts
-    retention_days             = var.sql_database_threat_logs_retention
-    email_account_admins       = var.sql_database_threat_email_admins
-    email_addresses            = var.sql_database_threat_emails
-  }
-
   tags = var.tags
 
   timeouts {
@@ -61,6 +38,7 @@ resource "azurerm_mssql_database" "sql_database" {
 }
 //**********************************************************************************************
 
+/*
 // Sets up diagnostics for Azure SQL Database
 //**********************************************************************************************
 resource "azurerm_monitor_diagnostic_setting" "sql_database_diagnostic_settings" {
@@ -69,8 +47,8 @@ resource "azurerm_monitor_diagnostic_setting" "sql_database_diagnostic_settings"
   target_resource_id         = azurerm_mssql_database.sql_database.id
   log_analytics_workspace_id = var.sql_database_workspace_id
 
-  dynamic "log" {
-    for_each = var.sql_database_diagnostics.logs
+  dynamic "enable_log" {
+    for_each = var.sql_database_diagnostics.enable_log
     content {
       category = log.value
 
@@ -94,3 +72,4 @@ resource "azurerm_monitor_diagnostic_setting" "sql_database_diagnostic_settings"
   }
 }
 //**********************************************************************************************
+*/

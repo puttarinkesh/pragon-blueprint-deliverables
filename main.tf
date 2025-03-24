@@ -85,10 +85,11 @@ module "application_insights" {
 
 // Storage Account Deployment
 module "storage_account" {
-  source               = "./terraform_modules/azure_storage_account"
-  storage_account_name = var.storage_account_name
-  resource_group_name  = module.resource_group.name
-  location             = module.resource_group.location
+  source                                = "./terraform_modules/azure_storage_account"
+  storage_account_name                  = var.storage_account_name
+  resource_group_name                   = module.resource_group.name
+  location                              = module.resource_group.location
+  storage_account_static_website_deploy = var.storage_account_static_website_deploy
 }
 
 // Storage Account Container Deployment
@@ -108,6 +109,7 @@ module "key_vault" {
   keyvault_purge_protection_enabled = var.keyvault_purge_protection_enabled
 }
 
+
 // Azure SQL Database Deployment
 module "sql_database" {
   source            = "./terraform_modules/azure_sql_database"
@@ -115,6 +117,20 @@ module "sql_database" {
   sql_server_id     = var.sql_server_id
   tags              = var.tags
 }
+
+module "azurerm_cdn_profile" {
+  source                                 = "./terraform_modules/azurerm_cdn_profile_and_endpoint"
+  cdn_profile_name                       = var.cdn_profile_name
+  resource_group_name                    = module.resource_group.name
+  location                               = module.resource_group.location
+  tags                                   = var.tags
+  cdn_profile_sto_acc_origin_host_header = module.storage_account.primary_web_host
+
+}
+
+
+
+
 
 # module "api_management" {
 #   source                                  = "./terraform_modules/azure_api_management"

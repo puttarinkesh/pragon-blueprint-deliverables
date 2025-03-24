@@ -116,6 +116,11 @@ variable "storage_account_name" {
 variable "storage_account_container_name" {
   description = "(Required) The name of the Container which should be created within the Storage Account. Changing this forces a new resource to be created."
 }
+variable "storage_account_static_website_deploy" {
+  description = "(Optional) Enable https traffic  access"
+  type        = bool
+  default     = true
+}
 
 // API Management
 //**********************************************************************************************
@@ -227,3 +232,11 @@ variable "sql_server_id" {
   description = "(Required) The id of the Ms SQL Server on which to create the database. Changing this forces a new resource to be created."
 }
 //**********************************************************************************************
+
+//Variables for CDN profile
+//****************************************************************************
+variable "cdn_profile_name" {
+  description = "(Optional) A unique identifier for the  Add CDN profile and endpoint . Part of the naming scheme."
+  type        = string
+}
+//****************************************************************************

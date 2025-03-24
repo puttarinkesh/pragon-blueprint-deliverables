@@ -93,28 +93,8 @@ variable "sql_database_LTR_week_of_year" {
   type        = number
   default     = 1
 }
-variable "sql_database_threat_policy_state" {
-  description = "(Optional) The State of the Policy. Possible values are Enabled, Disabled or New."
-  type        = string
-  default     = "Disabled"
-}
 variable "sql_database_disabled_alerts" {
   description = "(Optional) Specifies a list of alerts which should be disabled. Possible values include Access_Anomaly, Sql_Injection and Sql_Injection_Vulnerability."
-  type        = list(string)
-  default     = []
-}
-variable "sql_database_threat_logs_retention" {
-  description = "(Optional) Specifies the number of days to keep in the Threat Detection audit logs."
-  type        = number
-  default     = 7
-}
-variable "sql_database_threat_email_admins" {
-  description = "(Optional) Should the account administrators be emailed when this alert is triggered?"
-  type        = string
-  default     = "Disabled"
-}
-variable "sql_database_threat_emails" {
-  description = "(Optional) A list of email addresses which alerts should be sent to."
   type        = list(string)
   default     = []
 }
@@ -130,9 +110,9 @@ variable "sql_database_audit_retention_days" {
 }
 variable "sql_database_diagnostics" {
   description = "(Optional) Diagnostic settings for those resources that support it."
-  type        = object({ logs = list(string), metrics = list(string) })
+  type        = object({ enable_log = list(string), metrics = list(string) })
   default = {
-    logs    = ["SQLInsights", "AutomaticTuning", "QueryStoreRuntimeStatistics", "QueryStoreWaitStatistics", "Errors", "DatabaseWaitStatistics", "Timeouts", "Blocks", "Deadlocks"]
+    enable_log    = ["SQLInsights", "AutomaticTuning", "QueryStoreRuntimeStatistics", "QueryStoreWaitStatistics", "Errors", "DatabaseWaitStatistics", "Timeouts", "Blocks", "Deadlocks"]
     metrics = ["Basic", "InstanceAndAppAdvanced", "WorkloadManagement"]
   }
 }

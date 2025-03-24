@@ -45,5 +45,20 @@ variable "tags" {
   type        = map(any)
   default     = {}
 }
+variable "storage_account_static_website_deploy" {
+  description = "(Optional) Enable https traffic  access"
+  type        = bool
+  default     = false
+}
+variable "storage_account_static_website_error_404_document" {
+  type        = string
+  description = "(Optional) The absolute path to a custom webpage that should be used when a request is made which does not correspond to an existing file."
+  default     = "404.html"
+}
+variable "storage_account_static_website_index_document" {
+  type        = string
+  description = "(Optional) The webpage that Azure Storage serves for requests to the root of a website or any subfolder. For example, index.html."
+  default     = "index.html"
+}
 //****************************************************************************
 
